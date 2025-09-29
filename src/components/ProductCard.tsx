@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from '@/hooks/use-toast';
+import { useCart } from '@/contexts/CartContext';
 
 interface ProductCardProps {
   product: {
@@ -29,17 +30,18 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const [isLiked, setIsLiked] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const { addToCart, addToWishlist, removeFromWishlist, isInWishlist } = useCart();
+  const isLiked = isInWishlist(product.id);
 
   const handleLike = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsLiked(!isLiked);
-    toast({
-      title: isLiked ? "Removed from favorites" : "Added to favorites",
-      description: isLiked ? "Product removed from your favorites" : "Product added to your favorites",
-    });
+    if (isLiked) {
+      removeFromWishlist(product.id);
+    } else {
+      addToWishlist(product.id);
+    }
   };
 
   const handleShare = (e: React.MouseEvent) => {
@@ -63,10 +65,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    toast({
-      title: "Added to cart",
-      description: "Product added to your shopping cart",
-    });
+    addToCart(product);
   };
 
   return (

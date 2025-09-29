@@ -12,12 +12,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/hooks/useAuth';
+import { useCart } from '@/contexts/CartContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export function Header() {
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, signOut } = useAuth();
+  const { cartCount, wishlist } = useCart();
   const navigate = useNavigate();
 
   const handleSearch = (e: React.FormEvent) => {
@@ -62,17 +64,31 @@ export function Header() {
           <div className="hidden md:flex items-center space-x-4">
             {user ? (
               <>
-                <Button variant="ghost" size="sm" className="relative">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="relative"
+                  onClick={() => navigate('/wishlist')}
+                >
                   <Heart className="w-5 h-5" />
-                  <Badge variant="destructive" className="absolute -top-2 -right-2 w-5 h-5 p-0 text-xs">
-                    3
-                  </Badge>
+                  {wishlist.length > 0 && (
+                    <Badge variant="destructive" className="absolute -top-2 -right-2 w-5 h-5 p-0 text-xs flex items-center justify-center">
+                      {wishlist.length}
+                    </Badge>
+                  )}
                 </Button>
-                <Button variant="ghost" size="sm" className="relative">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="relative"
+                  onClick={() => navigate('/cart')}
+                >
                   <ShoppingCart className="w-5 h-5" />
-                  <Badge variant="destructive" className="absolute -top-2 -right-2 w-5 h-5 p-0 text-xs">
-                    2
-                  </Badge>
+                  {cartCount > 0 && (
+                    <Badge variant="destructive" className="absolute -top-2 -right-2 w-5 h-5 p-0 text-xs flex items-center justify-center">
+                      {cartCount}
+                    </Badge>
+                  )}
                 </Button>
                 
                 <DropdownMenu>
@@ -175,13 +191,13 @@ export function Header() {
                     <Package className="mr-2 h-4 w-4" />
                     My Listings
                   </Button>
-                  <Button variant="ghost" className="justify-start">
+                  <Button variant="ghost" className="justify-start" onClick={() => navigate('/wishlist')}>
                     <Heart className="mr-2 h-4 w-4" />
-                    Favorites (3)
+                    Wishlist ({wishlist.length})
                   </Button>
-                  <Button variant="ghost" className="justify-start">
+                  <Button variant="ghost" className="justify-start" onClick={() => navigate('/cart')}>
                     <ShoppingCart className="mr-2 h-4 w-4" />
-                    Cart (2)
+                    Cart ({cartCount})
                   </Button>
                   <Button variant="ghost" className="justify-start" onClick={handleSignOut}>
                     <LogOut className="mr-2 h-4 w-4" />
