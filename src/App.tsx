@@ -17,6 +17,7 @@ import Checkout from "./pages/Checkout";
 import SellerDashboard from "./pages/SellerDashboard";
 import SearchResults from "./pages/SearchResults";
 import Wishlist from "./pages/Wishlist";
+import SetupProducts from "./pages/SetupProducts";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -67,6 +68,14 @@ const App = () => (
                     element={
                       <ProtectedRoute>
                         <AdminDashboard />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/setup-products" 
+                    element={
+                      <ProtectedRoute>
+                        <SetupProducts />
                       </ProtectedRoute>
                     } 
                   />
